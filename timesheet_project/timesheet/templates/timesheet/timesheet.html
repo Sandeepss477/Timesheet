@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Attendance Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #007bff;
+            border-radius: 10px;
+            color: white;
+        }
+        .title-container h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        .container {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .btn {
+            margin-right: 10px;
+        }
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .table td {
+            vertical-align: middle;
+        }
+        .empty-message {
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="title-container">
+            <h1>Employee Attendance Management System</h1>
+        </div>
+
+        <div class="mb-4 text-center">
+            <a href="{% url 'daily_report' %}" class="btn btn-primary">Download Daily Report</a>
+            <a href="{% url 'monthly_report' %}" class="btn btn-success">Download Monthly Report</a>
+            <a href="{% url 'yearly_report' %}" class="btn btn-info">Download Yearly Report</a>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Company</th>
+                    <th>Punch In</th>
+                    <th>Punch Out</th>
+                    <th>Hours</th>
+                    <th>Minutes</th>
+                    <th>Duration</th>
+                    <th>Work Status</th>
+                    <th>Comment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attendance in attendance_list %}
+                <tr>
+                    <td>{{ attendance.employee.name }}</td>
+                    <td>{{ attendance.employee.company }}</td>
+                    <td>{{ attendance.punch_in|date:"H:i:s" }}</td>
+                    <td>{{ attendance.punch_out|date:"H:i:s" }}</td>
+                    <td>{{ attendance.hours }}</td>
+                    <td>{{ attendance.minutes }}</td>
+                    <td>{{ attendance.duration }}</td>
+                    <td>{{ attendance.work_status }}</td> <!-- Displaying the work status -->
+                    <td>{{ attendance.comment }}</td> <!-- Displaying the comment -->
+                    <td>
+                        {% if not attendance.punch_out %}
+                        <a href="{% url 'punch_out' attendance.id %}" class="btn btn-danger">Punch Out</a>
+                        {% else %}
+                        <span class="text-success">Punched Out</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="text-center empty-message">No attendance records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
